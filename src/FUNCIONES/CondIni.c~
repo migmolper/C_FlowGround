@@ -1,0 +1,17 @@
+#include <math.h>
+#include <stdio.h>
+
+/********************************************************************/
+
+void CondIni(float * P0,int numels){
+
+  // Imponemos en cada volumen del dominio la condición inicial asignada
+
+  for(int i = 0;i<=numels -1;i++){
+
+    // Lectura del fichero de condiciones iniciales,
+    // de momento, inicializamos a cero el vector.    
+    P0[i] = 0;
+
+  } // End for i
+}

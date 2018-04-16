@@ -1,0 +1,49 @@
+
+# coding: utf-8
+
+# In[87]:
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib import animation
+from mpl_toolkits.mplot3d.axes3d import Axes3D
+
+
+# In[57]:
+
+
+data = pd.read_csv("./RESULTADOS/centers.rep", sep="\t", header=None)
+
+
+# In[58]:
+
+
+x = data[0].values
+y = data[1].values
+
+
+# In[86]:
+
+
+fig = plt.figure()
+ims = []
+for i in range(0,100):
+    path ="./RESULTADOS/results_%i.res" % i
+    frame = pd.read_csv(path,header=None)
+    P = frame[0].values
+    
+    figure_ans = plt.figure()
+    ax = figure_ans.gca(projection='3d')
+    ax.plot_trisurf(x, y, P, antialiased=True)
+
+    im = ax.plot_trisurf(x, y, P, antialiased=True)
+    plt.show()
+    
+    ims.append([im])
+
+ani = animation.ArtistAnimation(fig, ims, interval=50, blit=True,
+                                repeat_delay=1000)
+ani.save('Flow.mp4', fps = 10)
+

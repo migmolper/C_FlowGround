@@ -1,0 +1,18 @@
+
+#include <gsl/gsl_matrix.h>
+
+/********************************************************************/
+
+void float_to_gsl(float ** K, gsl_matrix * K_gsl,int numels){
+
+  for(int i = 0;i<numels;i++){
+
+    for(int j = 0;j<numels;j++){
+
+      gsl_matrix_set(K_gsl,i,j,K[i][j]);
+
+    }
+
+  }
+
+}

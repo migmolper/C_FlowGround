@@ -1,0 +1,6 @@
+ #!/bin/bash          
+gcc C_FlowGround.c ./FUNCIONES/*.c -o C_FlowGround -lgsl -lgslcblas -lm -std=c99
+./C_FlowGround
+python Flowground_viewer.py
+            
+

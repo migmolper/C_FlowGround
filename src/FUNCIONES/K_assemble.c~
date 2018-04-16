@@ -1,0 +1,51 @@
+#include <math.h>
+#include <stdio.h>
+
+/********************************************************************/
+
+void K_assemble(float * diag_princ,float ** cross_terms,float compress,
+		float deltat,float * v_area_elem,int ** near_elem,
+		float ** sign_movility,float ** dist_center_elem,
+		int numels,int ** BCC_flag){
+
+  // Generamos la diagonal principal de la matriz, la cual,
+  // solo esta definida en cada elemento por si mismo.
+
+  int aux;
+  
+  for(int i = 0;i<=numels -1;i++){
+
+    // Primero sumamos el término de variación temporal
+    diag_princ[i] = compress*v_area_elem[i]/deltat;
+
+    for(int j = 0;j<=3;j++){
+
+      // Luego sumamos los términos de los flujos en cada
+      // arista del volumen, en caso de ser una arista
+      // con condición de contorno de Numann (-2), se cancela.
+      diag_princ[i] += (BCC_flag[i][j]!=-2)*sign_movility[i][j]/
+	dist_center_elem[i][j];
+
+      // Cálculo de los términos cruzados asociados a cada elemento
+
+      aux = near_elem[i][j] - 1;
+
+      if(aux>=0){
+
+	// Calculo los términos cruzados del interior,
+	// los asociados a ghost cell se dejan con el valor
+	// NAN de iniciación de cross_terms[][], y simplemente
+	// se ignoran en el montaje de la matriz
+	cross_terms[i][j] = - sign_movility[aux][j]/
+	  dist_center_elem[aux][j];
+
+      } // End if
+
+    } // End for j
+
+  } // End for i
+
+}
+
+
+

@@ -1,0 +1,51 @@
+#include <math.h>
+#include <stdio.h>
+
+/********************************************************************/
+
+void assemble(float compress,float deltat,float * v_area_elem,
+		int ** near_elem,float ** sign_movility,
+		float ** dist_center_elem,int numels,int ** BCC_flag,
+	      float ** K){
+
+  // Ensamblamos la matriz de permeabilidad K del sistema
+  // K*P=B
+  
+  int aux;
+
+  // Recorro la matriz usando la diagonal principal y relleno los términos cruzados
+  // directamente desde cada diagonal sabiendo que la matriz es simétrica. 
+  for(int i = 0;i<numels;i++){
+
+    // Ensamblado de la matriz K
+
+    K[i][i] = compress*v_area_elem[i]/deltat;
+	
+    // Recorriendo la diagonal principal, estoy recorriendo los volumenes del dominio
+    // por lo tanto necesitio recorrer tambien las aristas de cada volumen.
+    for(int k = 0;k<=3;k++){
+      // Luego sumamos los términos de los flujos en cada
+      // arista del volumen, en caso de ser una arista
+      // con condición de contorno de Neumann (-2), se cancela.
+      K[i][i] += (BCC_flag[i][k]!=-2)*sign_movility[i][k]/
+	dist_center_elem[i][k];
+
+      // Cálculo de los términos cruzados asociados a cada elementos
+      aux = near_elem[i][k] - 1;
+      if(aux>=0){
+	// Diagonal superior
+	K[i][aux] = - sign_movility[aux][k]/
+	  dist_center_elem[aux][k];
+	// Diagonal inferior
+	K[aux][i] = - sign_movility[aux][k]/
+	  dist_center_elem[aux][k];	
+      } // End if
+
+    } // End for k
+
+  } // End for i
+
+} // End assemble
+
+
+

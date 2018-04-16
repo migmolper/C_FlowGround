@@ -1,0 +1,54 @@
+#include <math.h>
+
+/********************************************************************/
+
+void calc_physical_parameters(float ** dist_center_elem,float ** sign_movility,
+			      float * v_area_elem,float * perm,int * type_elem,float visc,
+			      float compress,float deltat,float ** n_x_elem,float ** n_y_elem,
+			      int numels,float ** l_lado_elem,int ** near_elem){
+
+  printf("Comprobaciones dentro de physical_parameters \n");
+  printf("parametros : %f, %f, %f \n",visc,compress,deltat);
+
+  // Variables auxiliares
+  float * lambda;
+  float ** sign;
+  float ** movility;
+  int aux;
+
+  for(int i = 0;i++;i<=numels-1){
+
+    // Cálculo del parámetro lambda
+    lambda[i] = perm[i]/visc;
+    
+    for(int j = 0;j++;j<=3){
+
+      // Cálculo del signo del flujo 
+      //sign[i][j] = n_x_elem[][];
+
+      // Cálculo de la movilidad en las aristas
+      if(near_elem[i][j] >= 0){
+
+	// Movilidad en las aristas de dominio
+	aux = near_elem[i][j] - 1;  
+	movility[i][j] = 2*(perm[i]*perm[aux])/(perm[i] + perm[aux]);
+
+      }
+      else{
+
+	// Movilidad en las aristas de contorno
+	movility[i][j] = 2*lambda[i]/l_lado_elem[i][j];
+	
+      }
+      // Fin calculo de las movilidades
+       
+
+      //sign_movility[i][j] = sign[i][j]*
+
+    } // End j
+  } // End i
+
+  
+  
+
+} // End calc_physical_parameters
